@@ -778,8 +778,87 @@ static void ProcessTriangleInternal(const VertexShader::OutputVertex& v0,
                 blend_output     = EvaluateBlendEquation(combiner_output, srcfactor, dest, dstfactor, params.blend_equation_rgb);
                 blend_output.a() = EvaluateBlendEquation(combiner_output, srcfactor, dest, dstfactor, params.blend_equation_a).a();
             } else {
-                LOG_CRITICAL(HW_GPU, "logic op: %x", registers.output_merger.logic_op);
-                UNIMPLEMENTED();
+                auto params = registers.output_merger.logic_op;
+
+                using LogicOp = decltype(params)::Op;
+
+                auto EvaluateLogicOp = [&](const Math::Vec4<u8>& src, const Math::Vec4<u8>& dest
+                                           LogicOp op) -> Math::Vec4<u8> {
+                    Math::Vec4<u8> result;
+                    
+                    switch(op) {
+                    case LogicOp::Clear:
+                        result = Math::Vec4<u8>(0,0,0,0);
+                        break;
+                    
+                    case LogicOp::And:
+                        result = src & dest;
+                        break;
+                    
+                    case LogicOp::AndReverse:
+                        result = src & ~dest;
+                        break;
+                    
+                    case LogicOp::Copy:
+                        result = src;
+                        break;
+                    
+                    case LogicOp::Set:
+                        result = Math::Vec4<u8>(1,1,1,1);
+                        break;
+                    
+                    case LogicOp::CopyInverted:
+                        result = ~src;
+                        break;
+                    
+                    case LogicOp::NoOp:
+                        result = dest;
+                        break;
+                    
+                    case LogicOp::Invert:
+                        result = ~dest;
+                        break;
+                    
+                    case LogicOp::Nand:
+                        result = ~(src & dest);
+                        break;
+                    
+                    case LogicOp::Or:
+                        result = src | dest;
+                        break;
+                    
+                    case LogicOp::Nor:
+                        result = ~(src | dest);
+                        break;
+                    
+                    case LogicOp::Xor:
+                        result = src ^ dest;
+                        break;
+                    
+                    case LogicOp::Equiv:
+                        result = ~(src ^ dest);
+                        break;
+                    
+                    case LogicOp::AndInverted:
+                        result = ~src & dest;
+                        break;
+                    
+                    case LogicOp::OrReverse:
+                        result = src | ~dest;
+                        break;
+                    
+                    case LogicOp::OrInverted:
+                        result = ~src | dest;
+                        break;
+                    default:
+                        LOG_CRITICAL(HW_GPU, "Unknown logic op %x", op);
+                        UNIMPLEMENTED();
+                    }
+                    
+                    return result;
+                };
+                
+                blend_output = EvaluateLogicOp(combiner_output, dest, params.op);
             }
 
             const Math::Vec4<u8> result = {

@@ -423,6 +423,27 @@ public:
     {
         return x*x + y*y + z*z + w*w;
     }
+    
+    // Needed for logic ops
+    Vec4<decltype(~T{})> operator ~() const
+    {
+        return MakeVec(~x,~y,~z,~w);
+    }
+    
+    Vec4<decltype(T{}&T{})> operator &(const Vec4& other) const
+    {
+        return MakeVec(x&other.x, y&other.y, z&other.z, w&other.w);
+    }
+    
+    Vec4<decltype(T{}|T{})> operator |(const Vec4& other) const
+    {
+        return MakeVec(x|other.x, y|other.y, z|other.z, w|other.w);
+    }
+    
+    Vec4<decltype(T{}^T{})> operator ^(const Vec4& other) const
+    {
+        return MakeVec(x^other.x, y^other.y, z^other.z, w^other.w);
+    }
 
     // Only implemented for T=float
     float Length() const;

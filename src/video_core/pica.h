@@ -374,7 +374,22 @@ struct Regs {
 
         union {
             enum Op {
+                Clear = 0,
+                And = 1,
+                AndReverse = 2,
+                Copy = 3,
                 Set = 4,
+                CopyInverted = 5,
+                NoOp = 6,
+                Invert = 7,
+                Nand = 8,
+                Or = 9,
+                Nor = 10,
+                Xor = 11,
+                Equiv = 12,
+                AndInverted = 13,
+                OrReverse = 14,
+                OrInverted = 15,
             };
 
             BitField<0, 4, Op> op;
