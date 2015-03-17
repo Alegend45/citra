@@ -384,10 +384,13 @@ static void ProcessTriangleInternal(const VertexShader::OutputVertex& v0,
 
                 auto GetSource = [&](Source source) -> Math::Vec4<u8> {
                     switch (source) {
-                    // TODO: What's the difference between these two?
+                    // TODO: Implement fragment lighting. The following is a bunch of hacks.
                     case Source::PrimaryColor:
                     case Source::PrimaryFragmentColor:
                         return primary_color;
+                    
+                    case Source::SecondaryFragmentColor:
+                        return 0;
 
                     case Source::Texture0:
                         return texture_color[0];

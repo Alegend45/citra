@@ -217,7 +217,9 @@ struct Regs {
     struct TevStageConfig {
         enum class Source : u32 {
             PrimaryColor           = 0x0,
+            
             PrimaryFragmentColor   = 0x1,
+            SecondaryFragmentColor = 0x2, 
 
             Texture0               = 0x3,
             Texture1               = 0x4,
