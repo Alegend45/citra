@@ -431,6 +431,7 @@ struct Regs {
 
     enum class StencilAction : u32 {
         Keep = 0,
+        AndReverse = 2,
         Xor  = 5,
     };
 

@@ -221,6 +221,9 @@ static u8 PerformStencilAction(Regs::StencilAction action, u8 dest, u8 ref) {
     case Regs::StencilAction::Keep:
         return dest;
 
+    case Regs::StencilAction::AndReverse:
+        return dest & ~ref;
+
     case Regs::StencilAction::Xor:
         return dest ^ ref;
 
